@@ -1,33 +1,34 @@
-import secrets
 import datetime
+from datetime import timedelta
+from decimal import Decimal, InvalidOperation
+import secrets
 from zoneinfo import ZoneInfo
 
-from django.core.mail import send_mail
+import requests
+from requests.exceptions import RequestException
+
 from django.conf import settings
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.templatetags.static import static
-
-from .models import ContactMessage, AllowedUser, EmailVerification
-from .forms import ContactForm, RegisterForm, LoginForm
-
-from datetime import timedelta
-
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.urls import reverse
-from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.templatetags.static import static
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from django.views.generic import (ListView, CreateView, UpdateView, DeleteView)
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from django.urls import reverse_lazy
-
-from .models import ContactMessage
-from .forms import ContactMessageForm
+from .forms import ContactForm, ContactMessageForm, LoginForm, RegisterForm
+from .models import AllowedUser, ContactMessage, EmailVerification, Product
+from .serializers import ContactMessageSerializer, ProductSerializer
 
 def landing(request):
     return render(request, 'sitio_web/landing.html')
@@ -54,79 +55,41 @@ def blog(request):
 
 
 def productos(request):
-    from django.shortcuts import render
+    dolar_venta = None
 
+    try:
+        response = requests.get(
+            "https://dolarapi.com/v1/dolares/oficial",
+            timeout=5
+        )
+        response.raise_for_status()
 
-def productos(request):
-    productos = [
-        {
-            "foto": static('sitio_web/producto/producto.jpg'),
-            "nombre": "Almendras Naturales",
-            "descripcion": "Almendras seleccionadas, sin sal ni agregados.",
-            "precio": 4500,
-            "unidad": "500 g",
-            "categoria": "Frutos secos",
-        },
-        {
-            "foto": static('sitio_web/producto/producto.jpg'),
-            "nombre": "Nueces Mariposa",
-            "descripcion": "Nueces de excelente calidad, ideales para tus comidas.",
-            "precio": 5200,
-            "unidad": "500 g",
-            "categoria": "Frutos secos",
-        },
-        {
-            "foto": static('sitio_web/producto/producto.jpg'),
-            "nombre": "Semillas de Chía",
-            "descripcion": "Fuente natural de fibra y nutrientes.",
-            "precio": 2800,
-            "unidad": "250 g",
-            "categoria": "Semillas",
-        },
-        {
-            "foto": static('sitio_web/producto/producto.jpg'),
-            "nombre": "Avena Tradicional",
-            "descripcion": "Avena en hojuelas para desayunos y preparaciones.",
-            "precio": 1900,
-            "unidad": "500 g",
-            "categoria": "Cereales",
-        },
-        {
-            "foto": static('sitio_web/producto/producto.jpg'),
-            "nombre": "Lentejas",
-            "descripcion": "Legumbres seleccionadas, nutritivas y versátiles.",
-            "precio": 2200,
-            "unidad": "500 g",
-            "categoria": "Legumbres",
-        },
-        {
-            "foto": static('sitio_web/producto/producto.jpg'),
-            "nombre": "Granola Natural",
-            "descripcion": "Mezcla crocante de avena, frutos secos y semillas.",
-            "precio": 3900,
-            "unidad": "400 g",
-            "categoria": "Cereales",
-        },
-        {
-            "foto": static('sitio_web/producto/producto.jpg'),
-            "nombre": "Semillas de Girasol",
-            "descripcion": "Semillas naturales, ideales para ensaladas y snacks.",
-            "precio": 2400,
-            "unidad": "300 g",
-            "categoria": "Semillas",
-        },
-        {
-            "foto": static('sitio_web/producto/producto.jpg'),
-            "nombre": "Maní Tostado",
-            "descripcion": "Maní tostado sin sal, simple y delicioso.",
-            "precio": 2500,
-            "unidad": "500 g",
-            "categoria": "Frutos secos",
-        },
-    ]
+        dolar_data = response.json()
+        dolar_venta = Decimal(str(dolar_data["venta"]))
+
+        if not dolar_venta.is_finite() or dolar_venta <= 0:
+            dolar_venta = None
+
+    except (
+        RequestException,
+        ValueError,
+        KeyError,
+        TypeError,
+        InvalidOperation
+    ):
+        dolar_venta = None
+
+    productos_db = Product.objects.all()
+
+    serializer = ProductSerializer(
+        productos_db,
+        many=True,
+        context={"dolar_venta": dolar_venta}
+    )
 
     return render(request, "sitio_web/productos.html", {
-        "productos": productos,
+        "productos": serializer.data,
+        "dolar_venta": dolar_venta,
     })
 
 def contacto(request):
@@ -231,16 +194,16 @@ def registro(request):
             send_mail(
                 subject="Validación de cuenta - Raíz Natural",
                 message=f"""
-Hola {user.first_name}:
+                    Hola {user.first_name}:
 
-Para validar tu cuenta ingresá al siguiente enlace:
+                    Para validar tu cuenta ingresá al siguiente enlace:
 
-{link}
+                    {link}
 
-Tu código de validación es: {code}
+                    Tu código de validación es: {code}
 
-El código vence en 15 minutos.
-""",
+                    El código vence en 15 minutos.
+                """,
                 from_email=None,
                 recipient_list=[email]
             )
@@ -393,3 +356,16 @@ class ContactMessageDeleteView(AdminRequiredMixin, DeleteView):
 
     template_name = "sitio_web/solicitud_confirm_delete.html"
     success_url = reverse_lazy("panel_solicitudes")
+
+
+class ContactMessageAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        solicitudes = ContactMessage.objects.all().order_by("-fecha_creacion")
+        serializer = ContactMessageSerializer(solicitudes, many=True)
+
+        return Response({
+            "total": solicitudes.count(),
+            "solicitudes": serializer.data
+        }, status=status.HTTP_200_OK)

@@ -253,6 +253,9 @@ body {
     font-size: 21px;
     font-weight: 700;
 }
+.product-price-dollar{
+    font-size: 14px;
+}
 
 .product-price span {
     margin-right: 2px;

@@ -66,6 +66,12 @@
 
                     <div class="product-footer">
 
+                        {% if producto.precio_usd is not None %}
+                            <div class="product-price-dollar">
+                                <span>US$</span>{{ producto.precio_usd }}
+                            </div>
+                        {% endif %}
+
                         <div class="product-price">
                             <span>$</span>{{ producto.precio }}
                         </div>

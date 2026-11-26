@@ -1,0 +1,249 @@
+/* PANEL GENERAL */
+.admin-panel {
+    width: 100%;
+    min-height: 100vh;
+    padding: 40px 6%;
+    box-sizing: border-box;
+    background-color: #F4EBDD;
+    color: #3F5D45;
+}
+
+/* ENCABEZADO */
+.admin-panel header {
+    margin-bottom: 35px;
+}
+
+.admin-panel h1 {
+    margin: 0 0 8px;
+    font-size: 2rem;
+}
+
+.admin-panel header p {
+    margin: 0;
+    color: #667568;
+}
+
+/* ESTADÍSTICAS */
+.statistics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 18px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    padding: 22px;
+    background-color: #fffdf8;
+    border-radius: 12px;
+    border: 1px solid #e5e8df;
+    box-shadow: 0 3px 10px rgba(63, 93, 69, 0.06);
+}
+
+.stat-card h3 {
+    margin: 0 0 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #667568;
+}
+
+.stat-card span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #3F5D45;
+}
+
+/* SECCIÓN DE SOLICITUDES */
+.requests-section {
+    padding: 25px;
+    background-color: #fffdf8;
+    border-radius: 12px;
+    border: 1px solid #e5e8df;
+    box-shadow: 0 3px 10px rgba(63, 93, 69, 0.06);
+    overflow-x: auto;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 1.35rem;
+}
+
+/* BOTONES Y ENLACES */
+.admin-panel a {
+    color: #3F5D45;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.admin-panel a:hover {
+    text-decoration: underline;
+}
+
+.section-header > a {
+    padding: 10px 16px;
+    background-color: #3F5D45;
+    color: white;
+    border-radius: 7px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.section-header > a:hover {
+    background-color: #314a37;
+    text-decoration: none;
+}
+
+/* TABLA */
+.admin-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+.admin-panel th {
+    padding: 14px 12px;
+    background-color: #A8C3A0;
+    color: #263d2c;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.admin-panel td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #e5e8df;
+    font-size: 0.95rem;
+}
+
+.admin-panel tbody tr:hover {
+    background-color: #f5f8f2;
+}
+
+.admin-panel tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ACCIONES */
+.admin-panel td a {
+    margin-right: 12px;
+}
+
+.admin-panel td a:last-child {
+    color: #a34343;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .admin-panel {
+        padding: 25px 15px;
+    }
+
+    .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .requests-section {
+        padding: 18px;
+    }
+
+    .admin-panel h1 {
+        font-size: 1.6rem;
+    }
+}
+/* GRILLA DE SOLICITUDES */
+.requests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+}
+
+/* TARJETA */
+.request-card {
+    background-color: #fffdf8;
+    border: 1px solid #e5e8df;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(63, 93, 69, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* ENCABEZADO */
+.request-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.request-card-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    overflow-wrap: anywhere;
+}
+
+.request-category {
+    background-color: #A8C3A0;
+    color: #263d2c;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* INFORMACIÓN */
+.request-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.request-card-body p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #667568;
+    overflow-wrap: anywhere;
+}
+
+.request-card-body strong {
+    color: #3F5D45;
+}
+
+/* ACCIONES */
+.request-card-actions {
+    display: flex;
+    gap: 15px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e8df;
+}
+
+.request-card-actions a {
+    color: #3F5D45;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.request-card-actions a:hover {
+    text-decoration: underline;
+}
+
+.request-card-actions .delete-link {
+    color: #a34343;
+}
+
+/* SIN SOLICITUDES */
+.empty-requests {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 30px;
+    color: #667568;
+}

@@ -83,3 +83,18 @@ class EmailVerification(models.Model):
 
     def is_valid(self):
         return timezone.now() <= self.expires_at
+
+
+class Product(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    unidad = models.CharField(max_length=50)
+    categoria = models.CharField(max_length=50)
+    foto = models.CharField(
+        max_length=255,
+        default="sitio_web/producto/producto.jpg"
+    )
+
+    def __str__(self):
+        return self.nombre

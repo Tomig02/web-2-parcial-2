@@ -1,6 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Panel de solicitudes{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'sitio_web/css/panel.css' %}">
+{% endblock %}
+
 
 {% block content %}
 
@@ -54,59 +60,56 @@
             </a>
         </div>
 
-        <table>
+        <div class="requests-grid">
 
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Categoría</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+            {% for solicitud in solicitudes %}
 
-            <tbody>
+                <article class="request-card">
 
-                {% for solicitud in solicitudes %}
-
-                    <tr>
-                        <td>{{ solicitud.nombre }}</td>
-
-                        <td>{{ solicitud.email }}</td>
-
-                        <td>
+                    <div class="request-card-header">
+                        <h3>{{ solicitud.nombre }}</h3>
+                        <span class="request-category">
                             {{ solicitud.get_categoria_display }}
-                        </td>
+                        </span>
+                    </div>
 
-                        <td>
+                    <div class="request-card-body">
+
+                        <p>
+                            <strong>Email:</strong>
+                            {{ solicitud.email }}
+                        </p>
+
+                        <p>
+                            <strong>Fecha:</strong>
                             {{ solicitud.fecha_creacion|date:"d/m/Y H:i" }}
-                        </td>
+                        </p>
 
-                        <td>
-                            <a href="{% url 'editar_solicitud' solicitud.pk %}">
-                                Editar
-                            </a>
+                    </div>
 
-                            <a href="{% url 'eliminar_solicitud' solicitud.pk %}">
-                                Eliminar
-                            </a>
-                        </td>
-                    </tr>
+                    <div class="request-card-actions">
 
-                {% empty %}
+                        <a href="{% url 'editar_solicitud' solicitud.pk %}">
+                            Editar
+                        </a>
 
-                    <tr>
-                        <td colspan="5">
-                            No hay solicitudes registradas.
-                        </td>
-                    </tr>
+                        <a href="{% url 'eliminar_solicitud' solicitud.pk %}" class="delete-link">
+                            Eliminar
+                        </a>
 
-                {% endfor %}
+                    </div>
 
-            </tbody>
+                </article>
 
-        </table>
+            {% empty %}
+
+                <p class="empty-requests">
+                    No hay solicitudes registradas.
+                </p>
+
+            {% endfor %}
+
+        </div>
 
     </section>
 
