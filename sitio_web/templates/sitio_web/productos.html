@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Productos{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'sitio_web/css/productos.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="products-page">
+
+<!-- HEADER -->
+
+    <header class="products-header">
+
+        <span class="products-eyebrow">
+            NUESTROS PRODUCTOS
+        </span>
+
+        <h1>
+            Elegí lo natural.
+        </h1>
+
+        <p>
+            Productos seleccionados para acompañar una alimentación
+            saludable, simple y consciente.
+        </p>
+
+    </header>
+
+
+    <!-- PRODUCTS -->
+
+    <section class="products-grid">
+
+        {% for producto in productos %}
+
+            <article class="product-card">
+
+                <div class="product-image">
+
+                    <img
+                        src="{{producto.foto}}"
+                        alt="{{ producto.nombre }}"
+                    >
+
+                    <span class="product-category">
+                        {{ producto.categoria }}
+                    </span>
+
+                </div>
+
+
+                <div class="product-content">
+
+                    <h2>
+                        {{ producto.nombre }}
+                    </h2>
+
+                    <p class="product-description">
+                        {{ producto.descripcion }}
+                    </p>
+
+
+                    <div class="product-footer">
+
+                        {% if producto.precio_usd is not None %}
+                            <div class="product-price-dollar">
+                                <span>US$</span>{{ producto.precio_usd }}
+                            </div>
+                        {% endif %}
+
+                        <div class="product-price">
+                            <span>$</span>{{ producto.precio }}
+                        </div>
+
+                        <span class="product-unit">
+                            {{ producto.unidad }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        {% empty %}
+
+            <p class="products-empty">
+                No hay productos disponibles.
+            </p>
+
+        {% endfor %}
+
+    </section>
+</div>
+{% endblock %}

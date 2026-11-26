@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'sitio_web/css/blog.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="blogspot">
+    {% for post in posts %}
+        {% include "sitio_web/blog_post.html" with post=post %}
+    {% endfor %}
+</section>
+{% endblock %}

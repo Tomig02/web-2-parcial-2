@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Panel de solicitudes{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'sitio_web/css/panel.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="admin-panel">
+
+    <header>
+        <h1>Gestión de solicitudes</h1>
+        <p>Administrá las consultas recibidas.</p>
+    </header>
+
+    <!-- RESUMEN ESTADÍSTICO -->
+
+    <section class="statistics">
+
+        <div class="stat-card">
+            <h3>Total de solicitudes</h3>
+            <span>{{ estadisticas.total }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Comerciales</h3>
+            <span>{{ estadisticas.comercial }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Técnicas</h3>
+            <span>{{ estadisticas.tecnica }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>RRHH</h3>
+            <span>{{ estadisticas.rrhh }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Generales</h3>
+            <span>{{ estadisticas.general }}</span>
+        </div>
+
+    </section>
+
+    <!-- LISTADO -->
+
+    <section class="requests-section">
+
+        <div class="section-header">
+            <h2>Solicitudes recibidas</h2>
+
+            <a href="{% url 'crear_solicitud' %}">
+                Nueva solicitud
+            </a>
+        </div>
+
+        <div class="requests-grid">
+
+            {% for solicitud in solicitudes %}
+
+                <article class="request-card">
+
+                    <div class="request-card-header">
+                        <h3>{{ solicitud.nombre }}</h3>
+                        <span class="request-category">
+                            {{ solicitud.get_categoria_display }}
+                        </span>
+                    </div>
+
+                    <div class="request-card-body">
+
+                        <p>
+                            <strong>Email:</strong>
+                            {{ solicitud.email }}
+                        </p>
+
+                        <p>
+                            <strong>Fecha:</strong>
+                            {{ solicitud.fecha_creacion|date:"d/m/Y H:i" }}
+                        </p>
+
+                    </div>
+
+                    <div class="request-card-actions">
+
+                        <a href="{% url 'editar_solicitud' solicitud.pk %}">
+                            Editar
+                        </a>
+
+                        <a href="{% url 'eliminar_solicitud' solicitud.pk %}" class="delete-link">
+                            Eliminar
+                        </a>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <p class="empty-requests">
+                    No hay solicitudes registradas.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

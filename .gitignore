@@ -143,3 +143,9 @@ GitHub.sublime-settings
 __pycache__/
 *.py[cod]
 *$py.class
+
+# SQLite database
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm

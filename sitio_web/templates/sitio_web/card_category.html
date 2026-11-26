@@ -1,0 +1,8 @@
+{% load static %}
+
+<a href="/productos" class="category">
+    <img src="{% static ''|add:img %}" class="category__image" />
+    <h3 class="category__title">{{ title }}</h3>
+    <p class="category__description">{{ description }}</p>
+    <span class="category__arrow" aria-hidden="true">→</span>
+</a>
