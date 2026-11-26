@@ -14,12 +14,31 @@
         <button class="burger-button hiden" id="burget-btn-hide">-</button>
 
         <ul class="link-menu-floating">
-            <li class="nav-item"><a class="nav-link" href="">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
             <li class="nav-item"><a class="nav-link" href="/#about-us">Nosotros</a></li>
             <li class="nav-item"><a class="nav-link" href="/blog">Vida natural</a></li>
             <li class="nav-item"><a class="nav-link" href="/contacto">Contacto</a></li>
     
             <li class="nav-item-special"><a class="nav-link" href="/productos">Productos</a></li>
+
+            {% if user.is_authenticated %}  
+                <li class="nav-item-special">
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="btn-logout" type="submit">Cerrar sesión</button>
+                    </form>
+                </li>
+                <li class="nav-item-special">
+                    <a class="nav-link" href="{% url 'panel_solicitudes' %}">Panel</a>
+                </li>
+            {% else %}
+                <li class="nav-item-special">
+                    <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
+                </li>
+                <li class="nav-item-special">
+                    <a class="nav-link" href="{% url 'registro' %}">Registrarse</a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 
