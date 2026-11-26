@@ -128,12 +128,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 CONTACT_EMAIL = 'tguardo@proyectoweb.website' 
 
-## EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-## DEFAULT_FROM_EMAIL = 'Web Productos Naturales <tguardo@proyectoweb.website>'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Web Productos Naturales <tguardo@proyectoweb.website>'
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "noreply@raiznatural.com"
-
+##EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+##DEFAULT_FROM_EMAIL = "noreply@raiznatural.com"
 
 EMAIL_HOST = 'c2280296.ferozo.com'
 EMAIL_PORT = 465

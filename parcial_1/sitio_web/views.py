@@ -26,7 +26,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .forms import ContactForm, ContactMessageForm, LoginForm, RegisterForm
+from .forms import ContactForm, ContactMessageForm, LoginForm, RegisterForm, VerificationForm
 from .models import AllowedUser, ContactMessage, EmailVerification, Product
 from .serializers import ContactMessageSerializer, ProductSerializer
 
@@ -218,8 +218,12 @@ def registro(request):
     else:
         form = RegisterForm()
 
-    return render(request, "sitio_web/registro.html", {
-        "form": form
+    return render(request, "sitio_web/formulario.html", {
+        "form": form,
+        "titulo": "Crear cuenta",
+        "texto_boton": "Registrarme",
+        "enlace_url": "login",
+        "enlace_texto": "Ya tengo una cuenta",
     })
 
 
@@ -230,8 +234,8 @@ def validar_cuenta(request, token):
         token=token
     )
 
+    form = None
     if request.method == "POST":
-
         code = request.POST.get("codigo", "").strip()
 
         if not verification.is_valid():
@@ -261,8 +265,14 @@ def validar_cuenta(request, token):
                 request,
                 "El código de validación es incorrecto."
             )
-
-    return render(request, "sitio_web/validar_cuenta.html")
+    else:
+        form = VerificationForm()
+    return render(request, "sitio_web/formulario.html", {
+        "form": form,
+        "titulo": "Validación de cuenta",
+        "descripcion": "Ingresá el código que recibiste por correo electrónico.",
+        "texto_boton": "Validar cuenta",
+    })
 
 def iniciar_sesion(request):
 
@@ -278,9 +288,14 @@ def iniciar_sesion(request):
     else:
         form = LoginForm()
 
-    return render(request, "sitio_web/login.html", {
-        "form": form
+    return render(request, "sitio_web/formulario.html", {
+        "form": form,
+        "titulo": "Iniciar sesión",
+        "texto_boton": "Ingresar",
+        "enlace_url": "registro",
+        "enlace_texto": "Crear cuenta",
     })
+
 
 
 @login_required
@@ -334,28 +349,33 @@ class ContactMessageListView(AdminRequiredMixin, ListView):
         return context
 
 
-class ContactMessageCreateView(AdminRequiredMixin, CreateView):
-
+class ContactMessageFormView(AdminRequiredMixin):
     model = ContactMessage
     form_class = ContactMessageForm
-
-    template_name = "sitio_web/solicitud_form.html"
+    template_name = "sitio_web/formulario.html"
     success_url = reverse_lazy("panel_solicitudes")
-
-class ContactMessageUpdateView(AdminRequiredMixin, UpdateView):
-
-    model = ContactMessage
-    form_class = ContactMessageForm
-
-    template_name = "sitio_web/solicitud_form.html"
-    success_url = reverse_lazy("panel_solicitudes")
+class ContactMessageCreateView(ContactMessageFormView, CreateView):
+    extra_context = {
+        "titulo": "Nueva solicitud",
+        "texto_boton": "Crear solicitud",
+    }
+class ContactMessageUpdateView(ContactMessageFormView, UpdateView):
+    extra_context = {
+        "titulo": "Editar solicitud",
+        "texto_boton": "Guardar cambios",
+    }
 
 class ContactMessageDeleteView(AdminRequiredMixin, DeleteView):
-
     model = ContactMessage
-
-    template_name = "sitio_web/solicitud_confirm_delete.html"
+    template_name = "sitio_web/formulario.html"
     success_url = reverse_lazy("panel_solicitudes")
+
+    extra_context = {
+        "titulo": "Eliminar solicitud",
+        "texto_boton": "Confirmar eliminación",
+        "descripcion": "¿Estás seguro de que querés eliminar esta solicitud?",
+        "es_eliminacion": True,
+    }
 
 
 class ContactMessageAPIView(APIView):

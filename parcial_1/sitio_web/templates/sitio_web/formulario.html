@@ -1,30 +1,40 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Iniciar sesión{% endblock %}
+{% block title %}{{ titulo }}{% endblock %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'sitio_web/css/form-modal.css' %}">
 {% endblock %}
 
 {% block content %}
+
 <div class="modal-form-container">
 
-    <h1>Iniciar sesión</h1>
+    <h1>{{ titulo }}</h1>
 
     {% for message in messages %}
         <p>{{ message }}</p>
     {% endfor %}
+
+    {% if descripcion %}
+        <p>{{ descripcion }}</p>
+    {% endif %}
 
     <form method="POST">
         {% csrf_token %}
 
         {{ form.as_p }}
 
-        <button type="submit">Ingresar</button>
+        <button type="submit">{{ texto_boton }}</button>
     </form>
 
-    <a href="{% url 'registro' %}">Crear cuenta</a>
+    {% if enlace_url %}
+        <a href="{% url enlace_url %}">
+            {{ enlace_texto }}
+        </a>
+    {% endif %}
 
 </div>
+
 {% endblock %}

@@ -132,3 +132,13 @@ class LoginForm(AuthenticationForm):
         ),
         "inactive": "Esta cuenta todavía no fue validada."
     }
+
+class VerificationForm(forms.Form):
+    codigo = forms.CharField(
+        label="Código de validación",
+        max_length=6,
+        min_length=6,
+        widget=forms.TextInput(attrs={
+            "placeholder": "Ingresá tu código"
+        })
+    )
