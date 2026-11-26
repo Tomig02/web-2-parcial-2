@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'sitio_web/contacto.css' %}">
+    <script src="{% static 'sitio_web/js/contacto.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="contact-page">
+
+    <!-- HEADER -->
+
+<header class="contact-header">
+    <span class="contact-eyebrow">
+        CONTACTO
+    </span>
+
+    <h1>
+        ¿Tenés alguna consulta?
+    </h1>
+
+    <p>
+        Estamos para ayudarte a incorporar hábitos saludables.
+        Ponete en contacto con nosotros o dejanos tu mensaje.
+    </p>
+</header>
+
+
+<!-- CONTACT SECTION -->
+
+<section class="contact-section">
+
+    <!-- INFORMATION -->
+
+    <aside class="contact-info">
+
+        <h2>
+            Información de contacto
+        </h2>
+
+        <p class="contact-info__description">
+            Comunicate directamente con nuestro equipo
+            o visitanos en nuestro local.
+        </p>
+
+
+        <div class="contact-details">
+
+            <div class="contact-detail">
+                <span class="contact-detail__icon">⌖</span>
+
+                <div>
+                    <span class="contact-detail__label">
+                        UBICACIÓN
+                    </span>
+
+                    <p>
+                        Av. Los Olivos 123, Córdoba, Argentina
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="contact-detail">
+                <span class="contact-detail__icon">◉</span>
+
+                <div>
+                    <span class="contact-detail__label">
+                        ATENCIÓN TELEFÓNICA
+                    </span>
+
+                    <p>
+                        +54 9 351 123 4567
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="contact-detail">
+                <span class="contact-detail__icon">✉</span>
+
+                <div>
+                    <span class="contact-detail__label">
+                        CORREO ELECTRÓNICO
+                    </span>
+
+                    <p>
+                        hola@raiznatural.com
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="contact-detail">
+                <span class="contact-detail__icon">◷</span>
+
+                <div>
+                    <span class="contact-detail__label">
+                        HORARIO DE ATENCIÓN
+                    </span>
+
+                    <p>
+                        Lunes a Viernes: 9:00 - 18:00 hs
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="contact-social">
+            <span>
+                Seguinos en redes:
+            </span>
+
+            <div class="social-links">
+                <a href="#" aria-label="Instagram">◎</a>
+                <a href="#" aria-label="Facebook">f</a>
+                <a href="#" aria-label="WhatsApp">◉</a>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- FORM -->
+
+    <div class="contact-form-container">
+
+        <form
+            method="POST"
+            class="contact-form"
+            id="contact-form"
+        >
+
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    {{ form.nombre.label_tag }}
+                    {{ form.nombre }}
+
+                    {% for error in form.nombre.errors %}
+                        <span class="form-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+                </div>
+
+
+                <div class="form-group">
+                    {{ form.email_telefono.label_tag }}
+                    {{ form.email_telefono }}
+
+                    {% for error in form.email_telefono.errors %}
+                        <span class="form-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                {{ form.motivo.label_tag }}
+                {{ form.motivo }}
+
+                {% for error in form.motivo.errors %}
+                    <span class="form-error">
+                        {{ error }}
+                    </span>
+                {% endfor %}
+            </div>
+
+
+            <div class="form-group">
+                {{ form.mensaje.label_tag }}
+                {{ form.mensaje }}
+
+                {% for error in form.mensaje.errors %}
+                    <span class="form-error">
+                        {{ error }}
+                    </span>
+                {% endfor %}
+            </div>
+
+
+            <div class="form-footer">
+
+                <button type="submit">
+                    Enviar consulta
+                    <span>→</span>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+ 
+{% if was_valid %}
+    <div class="custom-toast success" id="contact-toast">
+        <div class="toast-content">
+            <div class="toast-message">
+                <h4>¡Mensaje enviado con éxito!</h4>
+                <p>Recibimos tu consulta. Nos pondremos en contacto con vos muy pronto.</p>
+            </div>
+        </div>
+        <button class="toast-close" onclick="document.getElementById('contact-toast').remove()">&times;</button>
+    </div>
+{% endif %}
+
+</div>
+
+{% endblock %}

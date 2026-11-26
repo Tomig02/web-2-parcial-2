@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Registro{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'sitio_web/css/form-modal.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="modal-form-container">
+
+    <h1>Crear cuenta</h1>
+
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Registrarme</button>
+    </form>
+
+    <a href="{% url 'login' %}">Ya tengo una cuenta</a>
+
+</div>
+
+{% endblock %}

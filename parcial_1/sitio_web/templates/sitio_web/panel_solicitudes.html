@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de solicitudes{% endblock %}
+
+{% block content %}
+
+<div class="admin-panel">
+
+    <header>
+        <h1>Gestión de solicitudes</h1>
+        <p>Administrá las consultas recibidas.</p>
+    </header>
+
+    <!-- RESUMEN ESTADÍSTICO -->
+
+    <section class="statistics">
+
+        <div class="stat-card">
+            <h3>Total de solicitudes</h3>
+            <span>{{ estadisticas.total }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Comerciales</h3>
+            <span>{{ estadisticas.comercial }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Técnicas</h3>
+            <span>{{ estadisticas.tecnica }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>RRHH</h3>
+            <span>{{ estadisticas.rrhh }}</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Generales</h3>
+            <span>{{ estadisticas.general }}</span>
+        </div>
+
+    </section>
+
+    <!-- LISTADO -->
+
+    <section class="requests-section">
+
+        <div class="section-header">
+            <h2>Solicitudes recibidas</h2>
+
+            <a href="{% url 'crear_solicitud' %}">
+                Nueva solicitud
+            </a>
+        </div>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Categoría</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for solicitud in solicitudes %}
+
+                    <tr>
+                        <td>{{ solicitud.nombre }}</td>
+
+                        <td>{{ solicitud.email }}</td>
+
+                        <td>
+                            {{ solicitud.get_categoria_display }}
+                        </td>
+
+                        <td>
+                            {{ solicitud.fecha_creacion|date:"d/m/Y H:i" }}
+                        </td>
+
+                        <td>
+                            <a href="{% url 'editar_solicitud' solicitud.pk %}">
+                                Editar
+                            </a>
+
+                            <a href="{% url 'eliminar_solicitud' solicitud.pk %}">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="5">
+                            No hay solicitudes registradas.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</div>
+
+{% endblock %}
